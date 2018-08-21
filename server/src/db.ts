@@ -3,7 +3,8 @@ import { DefaultNamingStrategy } from 'typeorm/naming-strategy/DefaultNamingStra
 import { NamingStrategyInterface } from 'typeorm/naming-strategy/NamingStrategyInterface'
 import { snakeCase } from 'typeorm/util/StringUtils'
 import User from './users/entity'
-import { Player, Game } from './games/entities'
+import Event from './events/entity'
+import Ticket from './tickets/entity'
 
 class CustomNamingStrategy extends DefaultNamingStrategy implements NamingStrategyInterface {
   tableName(targetName: string, userSpecifiedName: string): string {
@@ -26,8 +27,8 @@ export default () =>
     url: process.env.DATABASE_URL || 'postgres://postgres:uber_tickets@localhost:5432/postgres',
     entities: [
       User,
-      Player,
-      Game
+      Event,
+      Ticket
     ],
     synchronize: true, // careful with this in production!
     logging: false,

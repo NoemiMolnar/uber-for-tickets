@@ -1,5 +1,5 @@
-import { JsonController, Authorized, CurrentUser, Post, Param, BadRequestError, HttpCode, NotFoundError, ForbiddenError, Get, Body, Patch } from 'routing-controllers'
-import User from '../users/entity'
+import { JsonController, Authorized, Post, Param, BadRequestError, HttpCode, NotFoundError, Body, Patch, Get } from 'routing-controllers'
+// import User from '../users/entity'
 import { Game, Player, Board, Snake, Location } from './entities'
 import { IsBoard, isValidTransition, finished, newCoin, calculateWinner } from './logic'
 import { Validate } from 'class-validator'
@@ -22,13 +22,13 @@ export default class GameController {
   @Post('/games')
   @HttpCode(201)
   async createGame(
-    @CurrentUser() user: User
+    // @CurrentUser() user: User
   ) {
     const entity = await Game.create().save()
 
     await Player.create({
       game: entity,
-      user,
+      // user,
       symbol: 'x',
       snake: [[1, 1]]
     }).save()
@@ -47,7 +47,7 @@ export default class GameController {
   @Post('/games/:id([0-9]+)/players')
   @HttpCode(201)
   async joinGame(
-    @CurrentUser() user: User,
+    // @CurrentUser() user: User,
     @Param('id') gameId: number
   ) {
     const game = await Game.findOneById(gameId)
@@ -59,7 +59,7 @@ export default class GameController {
 
     const player = await Player.create({
       game,
-      user,
+      // user,
       symbol: 'o',
       snake: [[3, 3]]
     }).save()
@@ -75,17 +75,17 @@ export default class GameController {
   @Authorized()
   @Patch('/games/:id([0-9]+)')
   async updateGame(
-    @CurrentUser() user: User,
+    // @CurrentUser() user: User,
     @Param('id') gameId: number,
     @Body() update: GameUpdate
   ) {
     const game = await Game.findOneById(gameId)
     if (!game) throw new NotFoundError(`Game does not exist`)
 
-    const player = await Player.findOne({ user, game })
-    if (!player) throw new ForbiddenError(`You are not part of this game`)
+    // const player = await Player.findOne({ user, game })
+    // if (!player) throw new ForbiddenError(`You are not part of this game`)
     if (game.status !== 'started') throw new BadRequestError(`The game is not started yet`)
-    if (player.symbol !== game.turn) throw new BadRequestError(`It's not your turn`)
+    // if (player.symbol !== game.turn) throw new BadRequestError(`It's not your turn`)
     if (!isValidTransition(game.board, update.board)) throw new BadRequestError(`Invalid move`)
     if (update.coin === null) {
       const coin = newCoin(update.snake, update.snake2)
@@ -94,22 +94,22 @@ export default class GameController {
 
     const winner = calculateWinner(update.snake, update.snake2)
     if (winner) {
-      game.winner = player.symbol === 'x' ? 'o' : 'x'
+      // game.winner = player.symbol === 'x' ? 'o' : 'x'
       game.status = 'finished'
     }
     else if (finished(update.board)) {
       game.status = 'finished'
     }
     else {
-      game.turn = player.symbol === 'x' ? 'o' : 'x'
+      // game.turn = player.symbol === 'x' ? 'o' : 'x'
     }
 
-    const index = game.players.indexOf(game.players.filter(p => p.id === player.id)[0])
-    game.players[index].snake = update.snake
+    // const index = game.players.indexOf(game.players.filter(p => p.id === player.id)[0])
+    // game.players[index].snake = update.snake
     game.board = update.board
-    player.snake = update.snake
+    // player.snake = update.snake
     await game.save()
-    await player.save()
+    // await player.save()
 
     io.emit('action', {
       type: 'UPDATE_GAME',

@@ -1,0 +1,10 @@
+.outer-paper {
+  margin: auto;
+  margin-top: 20px;
+  padding: 20px;
+  width: 60%;
+}
+
+body{
+  background-color: rgb(243, 235, 219)  
+}

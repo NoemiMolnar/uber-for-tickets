@@ -1,5 +1,4 @@
 import { BaseEntity, PrimaryGeneratedColumn, Column, Entity, Index, OneToMany, ManyToOne } from 'typeorm'
-import User from '../users/entity'
 
 export type Symbol = 'x' | 'o' | '$'
 export type Row = [ Symbol | null, Symbol | null, Symbol | null, Symbol | null, Symbol | null ]
@@ -48,9 +47,7 @@ export class Player extends BaseEntity {
 
   @PrimaryGeneratedColumn()
   id?: number
-
-  @ManyToOne(_ => User, user => user.players)
-  user: User
+r
 
   @ManyToOne(_ => Game, game => game.players)
   game: Game

@@ -1,8 +1,8 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm'
 import { Exclude } from 'class-transformer';
-import { IsString, MinLength,  } from 'class-validator';
+import { IsString, MinLength, } from 'class-validator';
 import * as bcrypt from 'bcrypt'
-import { Player } from '../games/entities';
+import Ticket from '../tickets/entity';
 
 @Entity()
 export default class User extends BaseEntity {
@@ -30,6 +30,6 @@ export default class User extends BaseEntity {
     return bcrypt.compare(rawPassword, this.password)
   }
 
-  @OneToMany(_ => Player, player => player.user) 
-  players: Player[]
+  @OneToMany(_ => Ticket, ticket => ticket.user)
+  tickets: Ticket[]
 }
