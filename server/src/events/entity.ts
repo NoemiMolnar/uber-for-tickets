@@ -1,5 +1,5 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm'
-import  Ticket  from '../tickets/entity'
+import { Ticket } from '../tickets/entity'
 
 @Entity()
 export default class Event extends BaseEntity {
@@ -22,6 +22,6 @@ export default class Event extends BaseEntity {
   // @Column('date')
   // endDate: Date
 
-  @OneToMany(_ => Ticket, ticket => ticket.event) 
+  @OneToMany(_ => Ticket, ticket => ticket.event, { eager: true })
   tickets: Ticket[]
 }
