@@ -16,11 +16,11 @@ export default class Event extends BaseEntity {
   @Column('text')
   picture: string
 
-  // @Column('date')
-  // startDate: Date
+  @Column('date', {nullable: true})
+  startDate?: Date
 
-  // @Column('date')
-  // endDate: Date
+  @Column('date', {nullable: true})
+  endDate?: Date
 
   @OneToMany(_ => Ticket, ticket => ticket.event, { eager: true })
   tickets: Ticket[]

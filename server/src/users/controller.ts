@@ -30,7 +30,6 @@ export default class UserController {
     return User.findOneById(id)
   }
 
-  // @Authorized()
   @Get('/users')
   async allUsers() {
     const users = await User.find({ relations: ["tickets"] });

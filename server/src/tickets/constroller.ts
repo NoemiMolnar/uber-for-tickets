@@ -1,4 +1,4 @@
-import { JsonController, Post, HttpCode, Param, Body, CurrentUser, Get } from 'routing-controllers'
+import { JsonController, Post, HttpCode, Param, Body, CurrentUser, Get, Authorized } from 'routing-controllers'
 import { Ticket, Comment } from '../tickets/entity'
 import Event from '../events/entity'
 import { io } from '../index'
@@ -7,7 +7,7 @@ import User from '../users/entity'
 @JsonController()
 export default class TicketController {
 
-  // @Authorized()  
+  @Authorized()  
   @Post('/events/:id/tickets')
   @HttpCode(201)
   async createTicket(
@@ -19,19 +19,20 @@ export default class TicketController {
     const entity = await Ticket.create({
       ...newTicket,
       event,
-      user
+      user,
+      time:new Date()
     }).save()
     const ticket = await Ticket.findOneById(entity.id)
 
     io.emit('action', {
       type: 'ADD_TICKET',
-      payload: ticket
+      payload: {id, ticket}
     })
 
     return ticket
   }
 
-  // @Authorized()  
+  @Authorized()
   @Post('/events/:id/tickets/:ticketid')
   @HttpCode(201)
   async createComment(
