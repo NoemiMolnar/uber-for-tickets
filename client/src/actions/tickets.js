@@ -15,7 +15,6 @@ export const createTicket = (description, picture, price, eventId) => (dispatch,
   const jwt = state.currentUser.jwt
 
   if (isExpired(jwt)) return dispatch(logout())
-
   request
     .post(`${baseUrl}/events/${eventId}/tickets`)
     .send({ description, picture, price })

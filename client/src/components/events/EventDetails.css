@@ -1,0 +1,14 @@
+.red{
+  background-color: brown;
+  padding: 10px;
+}
+
+.green{
+  background-color: rgb(71, 165, 42);
+  padding: 10px;
+}
+
+.yellow{
+  background-color: rgb(165, 163, 42);
+  padding: 10px;
+}

@@ -3,7 +3,9 @@ import { connect } from 'react-redux'
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
-import {createEvent} from '../../actions/events'
+import {createEvent} from '../../actions/events';
+import { getUsers } from '../../actions/users';
+import { getEvents } from '../../actions/events';
 
 
 const styles = theme => ({
@@ -23,11 +25,16 @@ class NewEvent extends PureComponent {
 
   }
 
+  componentWillMount() {
+    if (this.props.users === null) this.props.getUsers()
+    if (this.props.events === null) this.props.getEvents()
+  }
+
   handleSubmit = (e) => {
     e.preventDefault()
     this.props.createEvent(this.state.name, this.state.description, this.state.picture, this.state.startDate, this.state.endDate)
-    this.state = {}
-  }
+    this.props.history.push(`/events`)
+    }
 
   handleChange = (event) => {
     const { name, value } = event.target
@@ -93,11 +100,15 @@ class NewEvent extends PureComponent {
 
 const mapStateToProps = (state) => {
   return {
+    events: state.events === null ? null : state.events,
+    users: state.users === null ? null : state.users
   }
 }
 
 const mapDispatchToProps = {
-  createEvent
+  createEvent,
+  getEvents,
+  getUsers
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(NewEvent))

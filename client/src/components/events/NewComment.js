@@ -32,8 +32,7 @@ class NewComment extends PureComponent {
   handleSubmit = (e) => {
     e.preventDefault()
     this.props.createComment(this.state.content, this.props.match.params.id, this.props.match.params.ticketid)
-    this.state = {}
-  }
+    this.props.history.push(`/events/${this.props.match.params.id}/tickets/${this.props.match.params.ticketid}`)  }
 
   handleChange = (event) => {
     const { name, value } = event.target

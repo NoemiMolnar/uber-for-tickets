@@ -16,23 +16,27 @@ import InfoIcon from '@material-ui/icons/Info';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import { getUsers } from '../../actions/users';
 import { getEvents } from '../../actions/events';
+import { fraudRisk } from '../../logic';
+import './EventDetails.css'
 
-const styles = theme => ({
+
+let fColor = 'rgba(255, 255, 255, 0.54)'
+
+const styles = {
   root: {
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     overflow: 'hidden',
-    backgroundColor: theme.palette.background.paper,
   },
 
   icon: {
-    color: 'rgba(255, 255, 255, 0.54)',
+    color: fColor,
   },
   media: {
     objectFit: 'cover',
   },
-});
+};
 
 
 
@@ -45,29 +49,45 @@ class EventDetails extends PureComponent {
   renderTickets = (ticketObject, classes) => {
     if (ticketObject) {
       const ticketArray = Object.values(ticketObject)
-          return    <div className={classes.root}>
-              <GridList cellHeight={180} className={classes.gridList} cols={3}>
-                <GridListTile key="Subheader" cols={3} style={{ height: 'auto' }}>
-                <ListSubheader component="div">Available tickets</ListSubheader>
-                </GridListTile>
-                {ticketArray.map(ticket => (
-                  <GridListTile key={ticket.id}>
-                    {ticket.picture && <img src={ticket.picture} alt="Tickets"/>}
-                    <GridListTileBar
-                      title={ticket.price}
-                      subtitle={<span>by: {ticket.user.username}</span>}
-                      actionIcon={
-                        <IconButton className={classes.icon} onClick={()=>{
-                          this.props.history.push(`/events/${this.props.event.id}/tickets/${ticket.id}`)
-                        }}>
-                          <InfoIcon />
-                        </IconButton>
-                      }
-                    />
-                  </GridListTile>
-                ))}
-              </GridList>
-            </div>
+
+      return (<div className={classes.root}>
+        <GridList cellHeight={180} className={classes.gridList} cols={3}>
+          <GridListTile key="Subheader" cols={3} style={{ height: 'auto' }}>
+            <ListSubheader component="div">Available tickets</ListSubheader>
+          </GridListTile>
+
+          {ticketArray.map(ticket => {
+            if (fraudRisk(ticket, this.props.users) < 34) {
+              fColor = "green"
+            } else if (fraudRisk(ticket, this.props.users) > 64) {
+              fColor = "red"
+            } else {
+              fColor = "yellow"
+            }
+            return (
+              <GridListTile key={ticket.id} >
+                {ticket.picture && <img className={fColor} src={ticket.picture} alt="Tickets" />}
+                {!ticket.picture && <img className={fColor} src={"https://image.flaticon.com/icons/svg/100/100130.svg"} alt="Tickets" />}
+
+                <GridListTileBar
+                  title={ticket.price}
+                  subtitle={<span>by: {ticket.user.username}</span>}
+                  actionIcon={
+                    <IconButton className={classes.icon} onClick={() => {
+                      this.props.history.push(`/events/${this.props.event.id}/tickets/${ticket.id}`)
+                    }}>
+                      <InfoIcon />
+                    </IconButton>
+                  }
+                />
+              </GridListTile>)
+          })
+          })
+        }
+        </GridList>
+
+      </div>
+      )
     }
   }
 
@@ -121,7 +141,7 @@ class EventDetails extends PureComponent {
             >
               Back to the events
               </Button>
-              {this.props.authenticated && <Button
+            {this.props.authenticated && <Button
               size="small"
               color="primary"
               onClick={() => {
@@ -130,11 +150,11 @@ class EventDetails extends PureComponent {
               }
             >
               New ticket
-            </Button> }
+            </Button>}
 
           </CardActions>
         </Card>
-      
+
       </Paper>
     )
   }

@@ -4,6 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import {createTicket} from '../../actions/tickets'
+import { getUsers } from '../../actions/users';
+import { getEvents } from '../../actions/events';
 
 
 const styles = theme => ({
@@ -23,10 +25,15 @@ class NewTicket extends PureComponent {
 
   }
 
+  componentWillMount() {
+    if (this.props.users === null) this.props.getUsers()
+    if (this.props.events === null) this.props.getEvents()
+  }
+
   handleSubmit = (e) => {
     e.preventDefault()
     this.props.createTicket(this.state.description, this.state.picture, this.state.price, this.props.match.params.id)
-    this.state = {}
+    this.props.history.push(`/events/${this.props.match.params.id}`)
   }
 
   handleChange = (event) => {
@@ -80,11 +87,15 @@ class NewTicket extends PureComponent {
 
 const mapStateToProps = (state) => {
   return {
+    events: state.events === null ? null : state.events,
+    users: state.users === null ? null : state.users
   }
 }
 
 const mapDispatchToProps = {
-  createTicket
+  createTicket,
+  getEvents,
+  getUsers
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(NewTicket))

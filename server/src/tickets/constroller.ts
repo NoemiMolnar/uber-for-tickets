@@ -15,6 +15,7 @@ export default class TicketController {
     @Param('id') id: number,
     @CurrentUser() user: User
   ) {
+    console.log(id)
     const event = await Event.findOneById(id)
     const entity = await Ticket.create({
       ...newTicket,

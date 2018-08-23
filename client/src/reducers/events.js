@@ -13,13 +13,10 @@ export default (state = null, { type, payload }) => {
     case ADD_TICKET:
       const eventId = payload.id
 
-      return {
-        ...state,
-        eventId: {
-          ...state[eventId],
-          tickets: [payload.ticket, ...state[eventId].tickets]
-        }
-      }
+      let newState1 = { ...state }
+      newState1[eventId] =  {...state[eventId], tickets: [payload.ticket, ...state[eventId].tickets]}
+
+      return newState1
 
     case ADD_COMMENT:
       const event = payload.id
@@ -28,7 +25,7 @@ export default (state = null, { type, payload }) => {
       let newState = { ...state }
       newState[event].tickets[ticketIndex].comments = [payload.comment, ...newState[event].tickets[ticketIndex].comments]
 
-      return state
+      return newState
 
 
     case UPDATE_EVENTS:
