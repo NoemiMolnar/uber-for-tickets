@@ -32,20 +32,37 @@ class EventList extends PureComponent {
   }
 
 
+  currentEvents = (eventArray) => {
+    const currentEventArray = eventArray.filter(event => {
+      if (new Date(event.endDate) >= Date.now()) {
+        return event
+      }
+    })
+    {!this.state.pages && this.setState({
+      ...this.state,
+      pages: Math.floor((currentEventArray.length-1) / 4)
+    })
+  }
+  return currentEventArray
+  }
+
+
+
   createEventArray = (eventObject) => {
     const eventArray = Object.values(eventObject)
-    const events = eventArray.length
+    const currentEventArray = this.currentEvents(eventArray)
+    const events = currentEventArray.length
     let arrayOfFour;
     if (events > 4) {
       let start = 0 + 4 * this.state.currentPage;
       let end = 4 + 4 * this.state.currentPage;
-      if(end<events){
-      arrayOfFour = eventArray.slice(start, end)
+      if (end < events) {
+        arrayOfFour = currentEventArray.slice(start, end)
       } else {
-      arrayOfFour = eventArray.slice(start, events-1)
+        arrayOfFour = currentEventArray.slice(start, events)
       }
     } else {
-      arrayOfFour = eventArray
+      arrayOfFour = currentEventArray
     }
 
     return arrayOfFour
@@ -94,11 +111,6 @@ class EventList extends PureComponent {
       return <div>Loading...</div>
     }
     else {
-      { !this.state.pages && this.setState({
-          ...this.state,
-          pages: this.props.events && Math.floor(Object.values(this.props.events).length / 4)
-        })
-      }
       return (
         <Paper className="outer-paper">
           {this.renderCard(this.createEventArray(this.props.events), this.props.classes)}
@@ -118,21 +130,21 @@ class EventList extends PureComponent {
             onClick={() => {
               this.setState({
                 ...this.state,
-                currentPage: this.state.currentPage-1
-                }
+                currentPage: this.state.currentPage - 1
+              }
               )
             }
             }
           >
             Back
               </Button>}
-          {this.state.currentPage < this.state.pages && <Button
+          {this.state.pages > 0 && this.state.currentPage < this.state.pages && <Button
             size="small"
             color="primary"
             onClick={() => {
               this.setState({
                 ...this.state,
-                currentPage: this.state.currentPage+1
+                currentPage: this.state.currentPage + 1
               }
               )
             }
