@@ -16,7 +16,7 @@ import InfoIcon from '@material-ui/icons/Info';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import { getUsers } from '../../actions/users';
 import { getEvents } from '../../actions/events';
-import { fraudRisk } from '../../logic';
+import { fraudRisk } from './logic';
 import './EventDetails.css'
 
 
@@ -57,9 +57,9 @@ class EventDetails extends PureComponent {
           </GridListTile>
 
           {ticketArray.map(ticket => {
-            if (fraudRisk(ticket, this.props.users) < 34) {
+            if (fraudRisk(ticket, this.props.users, this.props.event) < 34) {
               fColor = "green"
-            } else if (fraudRisk(ticket, this.props.users) > 64) {
+            } else if (fraudRisk(ticket, this.props.users, this.props.event) > 64) {
               fColor = "red"
             } else {
               fColor = "yellow"

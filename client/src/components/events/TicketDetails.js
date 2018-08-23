@@ -14,7 +14,7 @@ import GridListTileBar from '@material-ui/core/GridListTileBar';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import { getUsers } from '../../actions/users';
 import { getEvents } from '../../actions/events';
-import { fraudRisk } from '../../logic'
+import { fraudRisk } from './logic'
 import { userId } from '../../jwt'
 
 
@@ -22,9 +22,6 @@ const styles = theme => ({
   media: {
     objectFit: 'cover',
   },
-  // card: {
-  //   maxWidth: '50%',
-  // },
 });
 
 
@@ -88,7 +85,7 @@ class TicketDetails extends PureComponent {
           Ticket from {ticket.user.username}
         </Typography>
         <Typography component="h1">
-          We calculated that the risk of this ticket being a fraud is <b><em>{fraudRisk(ticket, this.props.users)} % </em></b>
+          We calculated that the risk of this ticket being a fraud is <b><em>{fraudRisk(ticket, this.props.users, this.props.event)} % </em></b>
         </Typography>
         <Typography gutterBottom variant="headline" component="h1">
           Price {ticket.price}

@@ -1,14 +1,14 @@
 .red{
-  background-color: brown;
+  background-color: rgb(211, 54, 54);
   padding: 10px;
 }
 
 .green{
-  background-color: rgb(71, 165, 42);
+  background-color: rgb(87, 199, 53);
   padding: 10px;
 }
 
 .yellow{
-  background-color: rgb(165, 163, 42);
+  background-color: rgb(223, 220, 51);
   padding: 10px;
 }
