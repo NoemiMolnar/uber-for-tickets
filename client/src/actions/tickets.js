@@ -4,9 +4,16 @@ import { baseUrl } from '../constants'
 import { logout } from './users'
 
 export const ADD_TICKET = 'ADD_TICKET'
+export const EDIT_TICKET = 'EDIT_TICKET'
+
 
 export const addTicket = (event, ticket) => ({
   type: ADD_TICKET,
+  payload: { event, ticket }
+})
+
+export const editTicket = (event, ticket) => ({
+  type: EDIT_TICKET,
   payload: { event, ticket }
 })
 
@@ -17,6 +24,18 @@ export const createTicket = (description, picture, price, eventId) => (dispatch,
   if (isExpired(jwt)) return dispatch(logout())
   request
     .post(`${baseUrl}/events/${eventId}/tickets`)
+    .send({ description, picture, price })
+    .set('Authorization', `Bearer ${jwt}`)
+    .catch(err => console.error(err))
+}
+
+export const changeTicket = (description, picture, price, eventId, ticketId) => (dispatch, getState) => {
+  const state = getState()
+  const jwt = state.currentUser.jwt
+
+  if (isExpired(jwt)) return dispatch(logout())
+  request
+    .patch(`${baseUrl}/events/${eventId}/tickets/${ticketId}`)
     .send({ description, picture, price })
     .set('Authorization', `Bearer ${jwt}`)
     .catch(err => console.error(err))

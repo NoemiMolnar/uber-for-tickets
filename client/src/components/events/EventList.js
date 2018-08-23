@@ -32,25 +32,33 @@ class EventList extends PureComponent {
   }
 
 
-  currentEvents = (eventArray) => {
+  componentDidUpdate() {
+    if (this.props.events) {
+      const eventArray = Object.values(this.props.events)
+      const currentEventArray = eventArray.filter(event => {
+        if (new Date(event.endDate) >= Date.now()) {
+          return event
+        }
+      })
+      {
+      !this.state.pages && this.setState({
+        ...this.state,
+        pages: Math.floor((currentEventArray.length - 1) / 4)
+      })
+      }
+    }
+  }
+
+
+  createEventArray = (eventObject) => {
+    const eventArray = Object.values(eventObject)
+
     const currentEventArray = eventArray.filter(event => {
       if (new Date(event.endDate) >= Date.now()) {
         return event
       }
     })
-    {!this.state.pages && this.setState({
-      ...this.state,
-      pages: Math.floor((currentEventArray.length-1) / 4)
-    })
-  }
-  return currentEventArray
-  }
 
-
-
-  createEventArray = (eventObject) => {
-    const eventArray = Object.values(eventObject)
-    const currentEventArray = this.currentEvents(eventArray)
     const events = currentEventArray.length
     let arrayOfFour;
     if (events > 4) {

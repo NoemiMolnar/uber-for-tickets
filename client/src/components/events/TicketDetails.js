@@ -15,6 +15,8 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import { getUsers } from '../../actions/users';
 import { getEvents } from '../../actions/events';
 import { fraudRisk } from '../../logic'
+import { userId } from '../../jwt'
+
 
 const styles = theme => ({
   media: {
@@ -85,20 +87,20 @@ class TicketDetails extends PureComponent {
         <Typography variant="headline" component="h1">
           Ticket from {ticket.user.username}
         </Typography>
-        <Typography variant="headline" component="h4">
-          We calculated that the risk of this ticket being a fraud is {fraudRisk(ticket, this.props.users)} %
+        <Typography component="h1">
+          We calculated that the risk of this ticket being a fraud is <b><em>{fraudRisk(ticket, this.props.users)} % </em></b>
         </Typography>
         <Typography gutterBottom variant="headline" component="h1">
           Price {ticket.price}
         </Typography>
         <Card className={classes.card} key={ticket.id}>
-         {ticket.picture &&  <CardMedia
+          {ticket.picture && <CardMedia
             component="img"
             className={classes.media}
             height="300"
             image={ticket.picture}
             title="Contemplative Reptile"
-         /> }
+          />}
           <CardContent>
             <Typography component="p">
               {ticket.description}
@@ -115,7 +117,7 @@ class TicketDetails extends PureComponent {
             >
               Back to the event
               </Button>
-              <Button
+            <Button
               size="small"
               color="primary"
               onClick={() => {
@@ -125,6 +127,17 @@ class TicketDetails extends PureComponent {
             >
               Add Comment
               </Button>
+
+            {this.props.user.id === ticket.user.id && <Button
+              size="small"
+              color="primary"
+              onClick={() => {
+                this.props.history.push(`/events/${this.props.event.id}/tickets/${this.props.match.params.ticketid}/edit`)
+              }
+              }
+            >
+              Edit ticket
+            </Button>}
 
           </CardActions>
         </Card>
@@ -139,8 +152,9 @@ const mapStateToProps = (state, props) => {
   return {
     event: state.events && state.events[props.match.params.id],
     events: state.events === null ? null : state.events,
-    users: state.users === null ? null : state.users
-
+    users: state.users === null ? null : state.users,
+    user: state.currentUser && state.users &&
+      state.users[userId(state.currentUser.jwt)]
   }
 }
 

@@ -1,4 +1,4 @@
-import { JsonController, Post, HttpCode, Param, Body, CurrentUser, Get, Authorized } from 'routing-controllers'
+import { JsonController, Post, HttpCode, Param, Body, CurrentUser, Get, Authorized, Patch, NotFoundError, ForbiddenError } from 'routing-controllers'
 import { Ticket, Comment } from '../tickets/entity'
 import Event from '../events/entity'
 import { io } from '../index'
@@ -7,7 +7,7 @@ import User from '../users/entity'
 @JsonController()
 export default class TicketController {
 
-  @Authorized()  
+  @Authorized()
   @Post('/events/:id/tickets')
   @HttpCode(201)
   async createTicket(
@@ -21,13 +21,42 @@ export default class TicketController {
       ...newTicket,
       event,
       user,
-      time:new Date()
+      time: new Date()
     }).save()
     const ticket = await Ticket.findOneById(entity.id)
 
     io.emit('action', {
       type: 'ADD_TICKET',
-      payload: {id, ticket}
+      payload: { id, ticket }
+    })
+
+    return ticket
+  }
+
+  @Authorized()
+  @Patch('/events/:id/tickets/:ticketid')
+  @HttpCode(201)
+  async editTicket(
+    @Body() updateTicket: Ticket,
+    @Param('id') id: number,
+    @Param('ticketid') ticketid: number,
+    @CurrentUser() user: User
+  ) {
+    console.log(id, updateTicket)
+    const ticket = await Ticket.findOneById(ticketid)
+    if (!ticket) throw new NotFoundError(`Game does not exist`)
+    if (user.id !== ticket.user.id) throw new ForbiddenError(`You are not part of this game`)
+
+
+    if (updateTicket.description) { ticket.description = updateTicket.description; }
+    if (updateTicket.price) { ticket.price = updateTicket.price; }
+    if (updateTicket.picture) { ticket.picture = updateTicket.picture; }
+
+    await ticket.save()
+
+    io.emit('action', {
+      type: 'EDIT_TICKET',
+      payload: { id, ticket }
     })
 
     return ticket
@@ -53,7 +82,7 @@ export default class TicketController {
     const comment = await Comment.findOneById(entity.id)
     io.emit('action', {
       type: 'ADD_COMMENT',
-      payload: {id, ticketid, comment}
+      payload: { id, ticketid, comment }
     })
 
     return newComment

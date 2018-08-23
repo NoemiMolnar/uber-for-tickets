@@ -10,6 +10,7 @@ import TicketDetails from './components/events/TicketDetails'
 import NewEvent from './components/events/NewEvent'
 import NewTicket from'./components/events/NewTicket'
 import NewComment from './components/events/NewComment'
+import EditTicket from './components/events/EditTicket'
 import './App.css'
 
 class App extends Component {
@@ -29,6 +30,7 @@ class App extends Component {
             <Route exact path="/events/:id" component={EventDetails} />
             <Route exact path="/events/:id/new_ticket" component={NewTicket} />
             <Route exact path="/events/:id/tickets/:ticketid/new_comment" component={NewComment} />
+            <Route exact path="/events/:id/tickets/:ticketid/edit" component={EditTicket} />
             <Route exact path="/events/:id/tickets/:ticketid" component={TicketDetails} />
             <Route exact path="/" render={ () => <Redirect to="/events" /> } />
           </main>

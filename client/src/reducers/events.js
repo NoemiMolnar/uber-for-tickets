@@ -1,5 +1,5 @@
 import { ADD_EVENT, UPDATE_EVENTS } from '../actions/events'
-import { ADD_TICKET, ADD_COMMENT } from '../actions/tickets'
+import { ADD_TICKET, ADD_COMMENT, EDIT_TICKET } from '../actions/tickets'
 
 export default (state = null, { type, payload }) => {
   switch (type) {
@@ -14,9 +14,17 @@ export default (state = null, { type, payload }) => {
       const eventId = payload.id
 
       let newState1 = { ...state }
-      newState1[eventId] =  {...state[eventId], tickets: [payload.ticket, ...state[eventId].tickets]}
+      newState1[eventId] = { ...state[eventId], tickets: [payload.ticket, ...state[eventId].tickets] }
 
       return newState1
+
+    case EDIT_TICKET:
+      const eventId2 = payload.id
+
+      let newState2 = { ...state }
+      const ticketIndex2 = newState2[eventId2].tickets.indexOf(newState2[eventId2].tickets.filter(ticket=> ticket.id === payload.ticket.id)[0])
+      newState2[eventId2].tickets[ticketIndex2] = payload.ticket
+      return newState2
 
     case ADD_COMMENT:
       const event = payload.id
