@@ -10,14 +10,12 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import { getUsers } from '../../actions/users';
 import { getEvents } from '../../actions/events';
-import './EventList.css'
 
 const styles = {
   card: {
     maxWidth: 345,
   },
   media: {
-    // ⚠️ object-fit is not supported by IE11.
     objectFit: 'cover',
   },
 };
@@ -54,7 +52,6 @@ class EventList extends PureComponent {
               size="small" 
               color="primary"
                 onClick={() => {
-                  console.log(event.id)
                   this.props.history.push(`/events/${event.id}`)
                 }
                 }
@@ -72,10 +69,19 @@ class EventList extends PureComponent {
   }
 
   render() {
-    const pic = this.props.events && this.props.events[7].picture
     return (
       <Paper className="outer-paper">
         {this.renderCard(this.props.events, this.props.classes)}
+        {this.props.authenticated &&  <Button 
+              size="small" 
+              color="primary"
+                onClick={() => {
+                  this.props.history.push(`/new_event`)
+                }
+                }
+              >
+               Create Event
+              </Button>}
       </Paper>
     )
   }

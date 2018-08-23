@@ -74,14 +74,15 @@ export const signup = (username, password) => (dispatch) =>
 
 export const getUsers = () => (dispatch, getState) => {
   const state = getState()
-  if (!state.currentUser) return null
-  const jwt = state.currentUser.jwt
+  if (state.currentUser) {
+    const jwt = state.currentUser.jwt
 
   if (isExpired(jwt)) return dispatch(logout())
-
+  }
   request
     .get(`${baseUrl}/users`)
-    .set('Authorization', `Bearer ${jwt}`)
+    // .set('Authorization', `Bearer ${jwt}`)
     .then(result => dispatch(updateUsers(result.body)))
     .catch(err => console.error(err))
 }
+

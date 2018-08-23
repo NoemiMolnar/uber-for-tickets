@@ -37,20 +37,22 @@ export default class TicketController {
   @HttpCode(201)
   async createComment(
     @Body() newComment: Comment,
+    @Param('id') id: number,
     @Param('ticketid') ticketid: number,
     @CurrentUser() user: User
   ) {
     const ticket = await Ticket.findOneById(ticketid)
+
     const entity = await Comment.create({
       ticket,
       user,
       ...newComment
     }).save()
 
-    const newTicket = await Ticket.findOneById(entity.id)
+    const comment = await Comment.findOneById(entity.id)
     io.emit('action', {
-      type: 'UPDATE_TICKET',
-      payload: newTicket
+      type: 'ADD_COMMENT',
+      payload: {id, ticketid, comment}
     })
 
     return newComment
