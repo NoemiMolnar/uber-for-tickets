@@ -40,12 +40,12 @@ class EventList extends PureComponent {
           return event
         }
       })
-      {
+      
       !this.state.pages && this.setState({
         ...this.state,
         pages: Math.floor((currentEventArray.length - 1) / 4)
       })
-      }
+      
     }
   }
 

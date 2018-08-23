@@ -1,5 +1,5 @@
 export const fraudRisk = (ticket, users, event) => {
-  let risk = 2
+  let risk = 0
   if (users[ticket.user.id].tickets.length < 2) risk += 4
 
   const averagePrice = event.tickets.reduce((a, b) => {
