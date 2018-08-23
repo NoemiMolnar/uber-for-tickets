@@ -10,10 +10,11 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import { getUsers } from '../../actions/users';
 import { getEvents } from '../../actions/events';
+import './EventList.css';
 
 const styles = {
   card: {
-    maxWidth: 345,
+    maxWidth: '25%',
   },
   media: {
     objectFit: 'cover',
@@ -21,15 +22,38 @@ const styles = {
 };
 
 class EventList extends PureComponent {
-  componentWillMount() {
-      if (this.props.users === null) this.props.getUsers()
-      if (this.props.events === null) this.props.getEvents()
+  state = {
+    currentPage: 0
   }
 
-  renderCard = (eventObject, classes) => {
-    if (eventObject) {
-      const eventArray = Object.values(eventObject)
-      return eventArray.map((event) => {
+  componentWillMount() {
+    if (this.props.users === null) this.props.getUsers()
+    if (this.props.events === null) this.props.getEvents()
+  }
+
+
+  createEventArray = (eventObject) => {
+    const eventArray = Object.values(eventObject)
+    const events = eventArray.length
+    let arrayOfFour;
+    if (events > 4) {
+      let start = 0 + 4 * this.state.currentPage;
+      let end = 4 + 4 * this.state.currentPage;
+      if(end<events){
+      arrayOfFour = eventArray.slice(start, end)
+      } else {
+      arrayOfFour = eventArray.slice(start, events-1)
+      }
+    } else {
+      arrayOfFour = eventArray
+    }
+
+    return arrayOfFour
+  }
+
+  renderCard = (eventArray, classes) => {
+    return <div className="flexBox">
+      {eventArray.map((event) => {
         return (
           <Card className={classes.card} key={event.id}>
             <CardMedia
@@ -48,9 +72,9 @@ class EventList extends PureComponent {
               </Typography>
             </CardContent>
             <CardActions>
-              <Button 
-              size="small" 
-              color="primary"
+              <Button
+                size="small"
+                color="primary"
                 onClick={() => {
                   this.props.history.push(`/events/${event.id}`)
                 }
@@ -58,32 +82,67 @@ class EventList extends PureComponent {
               >
                 Details
               </Button>
-
             </CardActions>
           </Card>
         )
-      })
-
-    }
-    else return <div>Loading...</div>
+      })}
+    </div>
   }
 
   render() {
-    return (
-      <Paper className="outer-paper">
-        {this.renderCard(this.props.events, this.props.classes)}
-        {this.props.authenticated &&  <Button 
-              size="small" 
-              color="primary"
-                onClick={() => {
-                  this.props.history.push(`/new_event`)
-                }
-                }
-              >
-               Create Event
+    if (!this.props.events) {
+      return <div>Loading...</div>
+    }
+    else {
+      { !this.state.pages && this.setState({
+          ...this.state,
+          pages: this.props.events && Math.floor(Object.values(this.props.events).length / 4)
+        })
+      }
+      return (
+        <Paper className="outer-paper">
+          {this.renderCard(this.createEventArray(this.props.events), this.props.classes)}
+          {this.props.authenticated && <Button
+            size="small"
+            color="primary"
+            onClick={() => {
+              this.props.history.push(`/new_event`)
+            }
+            }
+          >
+            Create Event
               </Button>}
-      </Paper>
-    )
+          {this.state.currentPage > 0 && <Button
+            size="small"
+            color="primary"
+            onClick={() => {
+              this.setState({
+                ...this.state,
+                currentPage: this.state.currentPage-1
+                }
+              )
+            }
+            }
+          >
+            Back
+              </Button>}
+          {this.state.currentPage < this.state.pages && <Button
+            size="small"
+            color="primary"
+            onClick={() => {
+              this.setState({
+                ...this.state,
+                currentPage: this.state.currentPage+1
+              }
+              )
+            }
+            }
+          >
+            Next
+                </Button>}
+        </Paper>
+      )
+    }
   }
 
 }
