@@ -112,7 +112,7 @@ class TicketDetails extends PureComponent {
             >
               Back to the event
               </Button>
-            <Button
+              {this.props.user && <Button
               size="small"
               color="primary"
               onClick={() => {
@@ -121,9 +121,9 @@ class TicketDetails extends PureComponent {
               }
             >
               Add Comment
-              </Button>
+            </Button> }
 
-            {this.props.user.id === ticket.user.id && <Button
+            {this.props.user && this.props.user.id === ticket.user.id && <Button
               size="small"
               color="primary"
               onClick={() => {
