@@ -82,13 +82,13 @@ class TicketDetails extends PureComponent {
     return (
       <Paper className="outer-paper">
         <Typography variant="headline" component="h1">
-          Ticket from {ticket.user.username}
+          Ticket from <b>{ticket.user.username}</b> for the <b>{this.props.event.name}</b> event.
         </Typography>
         <Typography component="h1">
           We calculated that the risk of this ticket being a fraud is <b><em>{fraudRisk(ticket, this.props.users, this.props.event)} % </em></b>
         </Typography>
         <Typography gutterBottom variant="headline" component="h1">
-          Price {ticket.price}
+          Price: {ticket.price} €
         </Typography>
         <Card className={classes.card} key={ticket.id}>
           {ticket.picture && <CardMedia
