@@ -35,18 +35,16 @@ class TicketDetails extends PureComponent {
   renderComments = (commetArray, classes) => {
     if (commetArray) {
       return <div className={classes.root}>
-        <GridList cellHeight={"auto"} className={classes.gridList} cols={1}>
+        <GridList cellHeight={'auto'} className={classes.gridList} cols={1}>
           <GridListTile key="Subheader" cols={1} style={{ height: 'auto' }}>
             <ListSubheader component="div">Comments</ListSubheader>
           </GridListTile>
           {commetArray.map(comment => (
             <GridListTile key={comment.id}>
               <Typography component="p">
-                {comment.content}
+              <b>{comment.user.username}:</b> {comment.content}
               </Typography>
               <GridListTileBar
-                title={comment.price}
-                subtitle={<span>by: {comment.user}</span>}
               />
             </GridListTile>
           ))}

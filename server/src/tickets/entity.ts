@@ -42,6 +42,6 @@ export class Comment extends BaseEntity {
   @ManyToOne(_ => Ticket, ticket => ticket.comments)
   ticket: Ticket
 
-  @ManyToOne(_ => User, user => user.tickets)
+  @ManyToOne(_ => User, user => user.tickets, { eager: true })
   user: User
 }
