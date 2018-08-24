@@ -37,7 +37,7 @@ export default class TicketController {
   @Patch('/events/:id/tickets/:ticketid')
   @HttpCode(201)
   async editTicket(
-    @Body() updateTicket: Ticket,
+    @Body() updateTicket,
     @Param('id') id: number,
     @Param('ticketid') ticketid: number,
     @CurrentUser() user: User
@@ -49,7 +49,7 @@ export default class TicketController {
 
 
     if (updateTicket.description) { ticket.description = updateTicket.description; }
-    if (updateTicket.price) { ticket.price = updateTicket.price; }
+    if (updateTicket.price) { ticket.price = parseInt(updateTicket.price); }
     if (updateTicket.picture) { ticket.picture = updateTicket.picture; }
 
     await ticket.save()

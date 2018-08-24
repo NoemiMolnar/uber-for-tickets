@@ -15,7 +15,7 @@ export default (state = null, { type, payload }) => {
 
       let newState1 = { ...state }
       newState1[eventId] = { ...state[eventId], tickets: [payload.ticket, ...state[eventId].tickets] }
-
+console.log(payload)
       return newState1
 
     case EDIT_TICKET:
@@ -24,6 +24,8 @@ export default (state = null, { type, payload }) => {
       let newState2 = { ...state }
       const ticketIndex2 = newState2[eventId2].tickets.indexOf(newState2[eventId2].tickets.filter(ticket=> ticket.id === payload.ticket.id)[0])
       newState2[eventId2].tickets[ticketIndex2] = payload.ticket
+console.log(payload.ticket)
+      
       return newState2
 
     case ADD_COMMENT:

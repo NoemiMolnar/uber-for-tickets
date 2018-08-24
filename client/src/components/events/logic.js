@@ -5,7 +5,6 @@ export const fraudRisk = (ticket, users, event) => {
   const averagePrice = event.tickets.reduce((a, b) => {
     return a + b.price
   }, 0) / event.tickets.length
-
   const difference = averagePrice - ticket.price
 
   if (difference > 0) {
@@ -27,7 +26,6 @@ export const fraudRisk = (ticket, users, event) => {
 
 
   if (ticket.comments.length > 3) risk += 6
-
 
   if (risk < 2) risk = 2
   if (risk > 98) risk = 98
