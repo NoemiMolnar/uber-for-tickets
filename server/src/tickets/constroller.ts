@@ -42,7 +42,6 @@ export default class TicketController {
     @Param('ticketid') ticketid: number,
     @CurrentUser() user: User
   ) {
-    console.log(id, updateTicket)
     const ticket = await Ticket.findOneById(ticketid)
     if (!ticket) throw new NotFoundError(`Game does not exist`)
     if (user.id !== ticket.user.id) throw new ForbiddenError(`You are not part of this game`)
