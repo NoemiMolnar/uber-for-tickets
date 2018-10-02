@@ -1,6 +1,6 @@
 # Uber for Tickets
 
-The application makes possible for customers to offer tickets to events in Amsterdam.
+The application makes possible for customers to offer tickets of events in Amsterdam for sale.
 
 ## Getting Started
 
